@@ -52,13 +52,13 @@ function purchaseStart() {
         name: "itemID",
         message: "Please pick the item ID of the product you are ordering",
         validate: function(val) {
-            return !isNaN(val) || val.toLowerCase() === "q";}
+            return !isNaN(val);}
         },{
         type: "input",
         name: "quantity",
         message: "How many of this item would you like?",
         validate: function(val) {
-            return val > 0 || val.toLowerCase() === "q";}
+            return val > 0;}
 
     }]).then(function(answers) {
         itemID = answers.itemID;
@@ -89,7 +89,16 @@ function askCustomerForItem() {
             purchaseStart();
         }else{
             console.log("Your total cost is: $", totalCost);
+            var thankU4ShoppingFigletized = "Thanks For Shopping!!";
+            figlet(thankU4ShoppingFigletized, function(err, data) {
+            if (err) {
+                console.log("Something wrong...");
+                console.dir(err);
+                return;
+            }
+            console.log(chalk.hex("#329999")(data));
             connection.end();
+            })
         }
     });
 }
@@ -98,14 +107,14 @@ function updateProduct() {
     console.log("Updating... : \n");
     if((stockQuantity-orderQuantity)>0) {
         var query = connection.query("UPDATE products SET ? WHERE ?", [{stock_quantity: stockQuantity-orderQuantity, product_sales: totalSale+=(price * orderQuantity)},{item_id: itemID}], function(err, respondez) {
-            console.log(respondez.affectedRows + " products updated!\n");
+            console.log(chalk.hex("#71cc0a")(respondez.affectedRows + " products updated..!\n"));
             calculateCost();
             askCustomerForItem();
         });
-        console.log(query.sql);
+        // console.log(query.sql);
     }else{
-        console.log("Insufficient Quantity!")
-        console.log("Your total cost is: $", totalCost);
+        console.log(chalk.red("Insufficient Quantity..!!\n"));
+        console.log("Your total cost is: $", totalCost +"\n");
         // connection.end();
         purchaseStart();
     }
@@ -116,11 +125,5 @@ function calculateCost() {
     totalCost+=currentCost;
     console.log("Your current cost is: $", currentCost);
     console.log("Your total cost is: $", totalCost);
-    console.log("The " + itemID + " product total sale now is: $" + totalSale)
+    // console.log("The " + itemID + " product total sale now is: $" + totalSale)
 }
-
-                function checkIfShouldQuit(choice) {
-                    if(choice.toLowerCase() === "q");
-                    console.log("I Quit!!");
-                    process.exit(0);
-                }
