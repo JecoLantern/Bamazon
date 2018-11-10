@@ -59,7 +59,7 @@ function runSearch() {
 }
 
 function viewProducts() {
-    console.log(chalk.hex("#71cc0a")("*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*"+"\n\n\t\tList of all available products: \n"));
+    console.log(chalk.hex("#71cc0a")("\n*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*"+"\n\n\t\tList of all available products: \n"));
     connection.query("SELECT * FROM products", function(err, respondez){
     if (err) throw err;
     console.table(respondez);
