@@ -1,6 +1,7 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 var chalk = require("chalk");
+var figlet = require("figlet");
 require("console.table");
 
 var connection = mysql.createConnection({
@@ -13,7 +14,16 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
     if (err)throw err;
-    console.log("Connection as ID: " + connection.threadId + "\n");
+    console.log(chalk.green("*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*\n\t\t We are Connected as ID: " + connection.threadId + "\n*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*\n"));
+    var bamazonFigletized = "BAMAZON Manager Suite";
+    figlet(bamazonFigletized, function(err, data) {
+    if (err) {
+        console.log("Something wrong...");
+        console.dir(err);
+        return;
+    }
+    console.log(chalk.hex("#329999")(data));
+    console.log(chalk.hex("#71cc0a")("\t\tWELCOME to BAmazon Manager Suite!\n\n" + "*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*\n\n"));
     runSearch();
 });
 
@@ -27,7 +37,8 @@ function runSearch() {
             "View Low Inventory(=count lower than five)",
             "Add to Inventory",
             "Add New Product",
-            "Delete A Product"
+            "Delete A Product",
+            "Sign Out"
         ]
     }).then(function(answer) {
         switch (answer.action) {
@@ -40,19 +51,17 @@ function runSearch() {
             case "Add New Product": addNewProduct();
             break;
             case "Delete A Product": deleteProduct();
+            break;
+            case "Sign Out": signOut();
+            break;
         }
     });
 }
 
 function viewProducts() {
-    console.log("Listing all available products: \n");
+    console.log(chalk.hex("#71cc0a")("*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*=.=*"+"\n\n\t\tList of all available products: \n"));
     connection.query("SELECT * FROM products", function(err, respondez){
     if (err) throw err;
-    // for (var i=0; i<respondez.length; i++){
-    //     console.log(
-
-    //     )
-    // }
     console.table(respondez);
     runSearch();
     })
@@ -88,7 +97,7 @@ function addInventoryInquire() {
     
     }]).then(function(answers){
         itemID = answers.itemID;
-        addQuantity = parseInt(answers.addQuanity);
+        addQuantity = parseInt(answers.addQuantity);
         logProduct();
     });
 }
@@ -160,7 +169,7 @@ function addNewProduct(){
     })
 }
 
-function deleteProduct() {
+function deleteProduct(){
     var itemIDdel;
 
     console.log(chalk.green("Which product would you like to delete? "));
@@ -179,4 +188,17 @@ function deleteProduct() {
         );
         viewProducts();
     });
+}})
+
+function signOut() {
+    var seeYaSoonFigletized = "See you again soon!!";
+    figlet(seeYaSoonFigletized, function(err, data) {
+        if (err) {
+            console.log("Something wrong...");
+            console.dir(err);
+            return;
+        }
+    console.log(chalk.hex("#329999")(data));
+    connection.end()
+})
 }
